@@ -1,0 +1,290 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-09-21 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "transaction_type",
+  "voucher_id",
+  "remarks",
+  "column_break_identification",
+  "request_id",
+  "api_log",
+  "section_break_transaction",
+  "posting_datetime_raw",
+  "column_break_gebn",
+  "posting_date",
+  "posting_time",
+  "section_break_parties",
+  "supplier_raw",
+  "supplier",
+  "column_break_source",
+  "source_warehouse_no",
+  "source_warehouse",
+  "column_break_target",
+  "target_warehouse_no",
+  "target_warehouse",
+  "section_break_items",
+  "items",
+  "section_break_processing",
+  "validation_status",
+  "rejection_reason",
+  "column_break_created_doc",
+  "created_document_type",
+  "created_document_name",
+  "column_break_processed",
+  "processed_on",
+  "processed_by",
+  "section_break_audit",
+  "raw_payload",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "MCE-TXN-.YYYY.-",
+   "read_only": 1
+  },
+  {
+   "description": "F1, G1A, G1G, H1 or H3 - validated in code (validators.py), not as a framework-level Select, so an unrecognised value still gets a saved Rejected record instead of blocking the insert outright.",
+   "fieldname": "transaction_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Transaction Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "voucher_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Voucher ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Data",
+   "label": "Remarks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_identification",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "request_id",
+   "fieldtype": "Data",
+   "label": "Request ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "api_log",
+   "fieldtype": "Link",
+   "label": "API Log",
+   "options": "MCE API Log",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_transaction",
+   "fieldtype": "Section Break",
+   "label": "Posting"
+  },
+  {
+   "fieldname": "posting_datetime_raw",
+   "fieldtype": "Data",
+   "label": "Posting Datetime (Raw)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_parties",
+   "fieldtype": "Section Break",
+   "label": "Supplier & Warehouses"
+  },
+  {
+   "fieldname": "supplier_raw",
+   "fieldtype": "Data",
+   "label": "Supplier (Raw)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_source",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "source_warehouse_no",
+   "fieldtype": "Data",
+   "label": "Source Warehouse (Raw Code)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_warehouse",
+   "fieldtype": "Link",
+   "label": "Source Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_target",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "target_warehouse_no",
+   "fieldtype": "Data",
+   "label": "Target Warehouse (Raw Code)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_warehouse",
+   "fieldtype": "Link",
+   "label": "Target Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_items",
+   "fieldtype": "Section Break",
+   "label": "Items"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "MCE Inventory Transaction Item"
+  },
+  {
+   "fieldname": "section_break_processing",
+   "fieldtype": "Section Break",
+   "label": "Processing"
+  },
+  {
+   "fieldname": "validation_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Validation Status",
+   "options": "\nAccepted\nRejected",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rejection_reason",
+   "fieldtype": "Small Text",
+   "label": "Rejection Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_created_doc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "created_document_type",
+   "fieldtype": "Data",
+   "label": "Created Document Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "created_document_name",
+   "fieldtype": "Data",
+   "label": "Created Document Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_processed",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "processed_on",
+   "fieldtype": "Datetime",
+   "label": "Processed On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "processed_by",
+   "fieldtype": "Link",
+   "label": "Processed By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_audit",
+   "fieldtype": "Section Break",
+   "label": "Audit"
+  },
+  {
+   "fieldname": "raw_payload",
+   "fieldtype": "Code",
+   "label": "Raw Payload",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "MCE Inventory Transaction",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_gebn",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "icon": "fa fa-truck",
+ "idx": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-09-21 13:50:40.687287",
+ "modified_by": "Administrator",
+ "module": "Masar MCE API",
+ "name": "MCE Inventory Transaction",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

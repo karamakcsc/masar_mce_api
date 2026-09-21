@@ -1,0 +1,19 @@
+{
+ "add_total_row": 1,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "is_standard": "Yes",
+ "module": "Masar MCE API",
+ "name": "MCE Processing Summary",
+ "prepared_report": 0,
+ "query": "SELECT\n  posting_date as \"Posting Date:Date:110\",\n  transaction_type as \"Type:Data:80\",\n  COUNT(*) as \"Total:Int:80\",\n  SUM(CASE WHEN validation_status = 'Accepted' THEN 1 ELSE 0 END) as \"Accepted:Int:90\",\n  SUM(CASE WHEN validation_status = 'Rejected' THEN 1 ELSE 0 END) as \"Rejected:Int:90\",\n  SUM(CASE WHEN docstatus = 1 THEN 1 ELSE 0 END) as \"Submitted:Int:90\",\n  SUM(CASE WHEN validation_status = 'Accepted' AND docstatus = 0 THEN 1 ELSE 0 END) as \"Pending Submission:Int:140\"\nFROM `tabMCE Inventory Transaction`\nGROUP BY posting_date, transaction_type\nORDER BY posting_date DESC, transaction_type",
+ "ref_doctype": "MCE Inventory Transaction",
+ "report_name": "MCE Processing Summary",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

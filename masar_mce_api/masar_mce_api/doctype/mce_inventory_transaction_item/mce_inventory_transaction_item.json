@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "creation": "2026-09-21 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "qty",
+  "column_break_rate",
+  "rate",
+  "amount",
+  "supplier_agreement_raw",
+  "validation_error"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rate",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supplier_agreement_raw",
+   "fieldtype": "Data",
+   "label": "Supplier Agreement (Raw)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "validation_error",
+   "fieldtype": "Small Text",
+   "label": "Validation Error",
+   "read_only": 1
+  }
+ ],
+ "idx": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-21 13:47:58.231476",
+ "modified_by": "Administrator",
+ "module": "Masar MCE API",
+ "name": "MCE Inventory Transaction Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

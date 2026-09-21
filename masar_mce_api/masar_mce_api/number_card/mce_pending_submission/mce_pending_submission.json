@@ -1,0 +1,16 @@
+{
+ "color": "#f0a30a",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "MCE Inventory Transaction",
+ "filters_json": "[[\"MCE Inventory Transaction\",\"validation_status\",\"=\",\"Accepted\"],[\"MCE Inventory Transaction\",\"docstatus\",\"=\",\"0\"]]",
+ "function": "Count",
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "MCE Pending Submission",
+ "module": "Masar MCE API",
+ "name": "MCE Pending Submission",
+ "show_percentage_stats": 0,
+ "stats_time_interval": "Daily",
+ "type": "Document Type"
+}

@@ -1,0 +1,230 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-09-21 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "api_name",
+  "api_type",
+  "request_id",
+  "column_break_request",
+  "http_method",
+  "endpoint",
+  "integration_user",
+  "section_break_status",
+  "application_status",
+  "status_code",
+  "error_message",
+  "column_break_counts",
+  "total_records",
+  "accepted_records",
+  "rejected_records",
+  "section_break_timing",
+  "request_timestamp",
+  "processing_duration",
+  "column_break_fgbv",
+  "response_timestamp",
+  "section_break_headers",
+  "request_headers",
+  "section_break_payloads",
+  "request_payload",
+  "response_payload"
+ ],
+ "fields": [
+  {
+   "default": "MCE-LOG-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "MCE-LOG-.YYYY.-",
+   "read_only": 1
+  },
+  {
+   "fieldname": "api_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "API Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "api_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "API Type",
+   "options": "Send\nReceive"
+  },
+  {
+   "fieldname": "request_id",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Request ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_request",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "http_method",
+   "fieldtype": "Data",
+   "label": "HTTP Method",
+   "read_only": 1
+  },
+  {
+   "fieldname": "endpoint",
+   "fieldtype": "Data",
+   "label": "Endpoint",
+   "read_only": 1
+  },
+  {
+   "fieldname": "integration_user",
+   "fieldtype": "Data",
+   "label": "Integration User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "fieldname": "application_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Application Status",
+   "options": "Success\nPartial Success\nFailed\nError",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status_code",
+   "fieldtype": "Int",
+   "label": "HTTP Status Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_message",
+   "fieldtype": "Small Text",
+   "label": "Error Message",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_counts",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_records",
+   "fieldtype": "Int",
+   "label": "Total Records",
+   "read_only": 1
+  },
+  {
+   "fieldname": "accepted_records",
+   "fieldtype": "Int",
+   "label": "Accepted Records",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rejected_records",
+   "fieldtype": "Int",
+   "label": "Rejected Records",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_timing",
+   "fieldtype": "Section Break",
+   "label": "Timing"
+  },
+  {
+   "fieldname": "request_timestamp",
+   "fieldtype": "Datetime",
+   "label": "Request Timestamp",
+   "read_only": 1
+  },
+  {
+   "fieldname": "response_timestamp",
+   "fieldtype": "Datetime",
+   "label": "Response Timestamp",
+   "read_only": 1
+  },
+  {
+   "fieldname": "processing_duration",
+   "fieldtype": "Float",
+   "label": "Processing Duration (s)",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_headers",
+   "fieldtype": "Section Break",
+   "label": "Request Headers (Masked)"
+  },
+  {
+   "fieldname": "request_headers",
+   "fieldtype": "Code",
+   "label": "Request Headers",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_payloads",
+   "fieldtype": "Section Break",
+   "label": "Payloads"
+  },
+  {
+   "fieldname": "request_payload",
+   "fieldtype": "Code",
+   "label": "Request Payload",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "response_payload",
+   "fieldtype": "Code",
+   "label": "Response Payload",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fgbv",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "icon": "fa fa-exchange",
+ "idx": 1,
+ "links": [
+  {
+   "link_doctype": "MCE Inventory Transaction",
+   "link_fieldname": "api_log"
+  }
+ ],
+ "modified": "2026-09-21 13:51:46.213786",
+ "modified_by": "Administrator",
+ "module": "Masar MCE API",
+ "name": "MCE API Log",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

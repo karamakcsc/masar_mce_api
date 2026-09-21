@@ -137,13 +137,14 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+    "Item": {
+        "on_update": "masar_mce.custom.item.item.on_update",
+    },
+    "Pricing Sheet": {
+        "on_submit": "masar_mce_api.custom.pricing_sheet.pricing_sheet.on_submit"
+    }
+}
 
 # Scheduled Tasks
 # ---------------
