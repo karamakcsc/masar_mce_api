@@ -139,7 +139,7 @@ app_license = "mit"
 
 doc_events = {
     "Item": {
-        "on_update": "masar_mce.custom.item.item.on_update",
+        "on_update": "masar_mce_api.custom.item.item.on_update",
     },
     "Pricing Sheet": {
         "on_submit": "masar_mce_api.custom.pricing_sheet.pricing_sheet.on_submit"
