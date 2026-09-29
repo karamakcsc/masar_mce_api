@@ -3,6 +3,8 @@ from masar_mce_api.utils import get_item_barcode, get_tax_for_item, get_item_pri
 from masar_mce_api.api import insert_pos_item
 
 def on_update(self, method):
+    if self.is_fixed_asset == 1:
+        return
     update_pos_item(self)
 
 

@@ -52,4 +52,4 @@ def create_pos_item(self):
             "AGR_STDATE": sa_doc.from_date,
             "AGR_ENDATE": sa_doc.to_date,
         }
-        insert_pos_item(payload_local_zone, payload_free_zone)
+        insert_pos_item(payload_local_zone, payload_free_zone, transactional=True)

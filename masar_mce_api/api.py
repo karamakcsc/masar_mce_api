@@ -27,14 +27,15 @@ def get_api_settings():
     return settings.url, headers, settings.request_method, settings.timeout
 
 
-def insert_pos_item(payload_local_zone, payload_free_zone):
+def insert_pos_item(payload_local_zone, payload_free_zone, transactional=False):
     if payload_free_zone and payload_local_zone:
         url, headers, method, timeout = get_api_settings()
         if not url or not headers or not method or not timeout:
+            
             frappe.throw("API Settings are not properly configured. Please check the settings.", alert=True, indicator="red")
             return
-        free_zone_response = _send_outgoing_request("insert_pos_item", url, method, headers, payload_free_zone, timeout)
-        local_zone_response = _send_outgoing_request("insert_pos_item", url, method, headers, payload_local_zone, timeout)
+        free_zone_response = _send_outgoing_request("insert_pos_item", url, method, headers, payload_free_zone, timeout, transactional)
+        local_zone_response = _send_outgoing_request("insert_pos_item", url, method, headers, payload_local_zone, timeout, transactional)
         if (
             free_zone_response is not None
             and local_zone_response is not None
@@ -48,11 +49,14 @@ def insert_pos_item(payload_local_zone, payload_free_zone):
             frappe.throw(f"Error in inserting item:<br>Local Zone response: {local_text}<br>Free Zone response: {free_text}")
 
 
-def _send_outgoing_request(api_name, url, method, headers, payload, timeout):
-    """POST payload to the external system, logging the call whether it
-    succeeds, fails, or raises - the log is committed before this returns so
-    a caller-side exception afterwards can never lose it. Credentials in
-    headers are masked before the log is ever written."""
+def _send_outgoing_request(api_name, url, method, headers, payload, timeout, transactional=False):
+    """POST payload to the external system and log the call, masking
+    credentials in headers.
+
+    transactional=False: the log is committed immediately.
+    transactional=True: the caller's transaction is not committed, so a failed
+    call can roll back the calling document. If a rollback happens, the log is
+    saved again afterwards so the failed call is still recorded."""
     started_at = now_datetime()
     body = json.dumps(payload, default=str)
 
@@ -78,10 +82,21 @@ def _send_outgoing_request(api_name, url, method, headers, payload, timeout):
 
     log.response_timestamp = now_datetime()
     log.processing_duration = (log.response_timestamp - started_at).total_seconds()
-    log.insert(ignore_permissions=True)
-    frappe.db.commit()
+
+    if transactional:
+        log_data = log.as_dict()  # taken before insert, so it has no name yet
+        log.insert(ignore_permissions=True)
+        frappe.db.after_rollback.add(lambda data=log_data: _save_log_after_rollback(data))
+    else:
+        log.insert(ignore_permissions=True)
+        frappe.db.commit()
     return response
 
+
+def _save_log_after_rollback(log_data):
+    """Runs after the caller's transaction was rolled back, in a fresh transaction."""
+    frappe.get_doc(log_data).insert(ignore_permissions=True)
+    frappe.db.commit()
 
 # ---------------------------------------------------------------------------
 # Inbound inventory transaction API
