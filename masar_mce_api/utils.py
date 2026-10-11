@@ -160,6 +160,17 @@ def item_exists(item_code):
     return cache[item_code]
 
 
+def item_allowed_for_supplier(item_code, supplier):
+    """S1 support: masar_mce only lets an Item be returned to a Supplier when
+    a Party Specific Item row links them."""
+    return bool(
+        frappe.db.exists(
+            "Party Specific Item",
+            {"based_on_value": item_code, "party_type": "Supplier", "party": supplier},
+        )
+    )
+
+
 def get_active_supplier_agreement(item_code):
     """Return the Blanket Order (Supplier Agreement) currently active for an
     Item: Item.custom_latest_sa if set, otherwise the most recent submitted

@@ -28,6 +28,8 @@ class MCEInventoryTransaction(Document):
 	def on_submit(self):
 		if self.transaction_type == "G1G":
 			self._create_purchase_receipt()
+		elif self.transaction_type == "S1":
+			self._create_return_to_supplier_entry()
 		else:
 			self._create_stock_entry()
 		self.db_set("processed_on", now_datetime(), update_modified=False)
@@ -61,6 +63,37 @@ class MCEInventoryTransaction(Document):
 			)
 		if _auto_submit_enabled():
 			se.custom_viewed_by_warehouse = 1
+		se.insert(ignore_permissions=True)
+		if _auto_submit_enabled():
+			se.submit()
+		self.db_set("created_document_type", "Stock Entry", update_modified=False)
+		self.db_set("created_document_name", se.name, update_modified=False)
+
+	def _create_return_to_supplier_entry(self):
+		"""S1: an 'إرجاع إلى المورد' (Material Issue) Stock Entry out of
+		source_warehouse back to the Supplier. There is no target warehouse,
+		and the outgoing rate comes from stock valuation, not the received
+		rate. masar_mce's own Stock Entry.on_submit re-checks the Party
+		Specific Items and posts the supplier GL entries."""
+		company = frappe.db.get_value("Warehouse", self.source_warehouse, "company")
+		se = frappe.new_doc("Stock Entry")
+		se.stock_entry_type = "إرجاع إلى المورد"
+		se.purpose = "Material Issue"
+		se.company = company
+		se.custom_supplier = self.supplier
+		se.posting_date = self.posting_date
+		se.posting_time = self.posting_time
+		se.set_posting_time = 1
+		se.remarks = self.remarks
+		for row in self.items:
+			se.append(
+				"items",
+				{
+					"item_code": row.item_code,
+					"qty": row.qty,
+					"s_warehouse": self.source_warehouse,
+				},
+			)
 		se.insert(ignore_permissions=True)
 		if _auto_submit_enabled():
 			se.submit()

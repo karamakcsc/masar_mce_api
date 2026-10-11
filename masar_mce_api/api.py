@@ -102,7 +102,7 @@ def _save_log_after_rollback(log_data):
 # Inbound inventory transaction API
 # ---------------------------------------------------------------------------
 
-@frappe.whitelist(allow_guest=True, methods=["POST"])
+@frappe.whitelist(methods=["POST"])
 def process_inventory_transaction():
     """Receive up to DEFAULT_MAX_BATCH_SIZE inventory transactions
     synchronously (never enqueued). Every transaction is always saved as an
@@ -160,25 +160,31 @@ def process_inventory_transaction():
 
 
 def _parse_transactions(form_dict):
-    transactions = form_dict.get("transactions")
-    if transactions is None:
-        frappe.throw(_("transactions is required"))
-    if isinstance(transactions, str):
+    return _parse_records(form_dict, "transactions")
+
+
+def _parse_records(form_dict, key):
+    """Shared by every receive API: form_dict[key] must be a non-empty list
+    of objects (or its JSON string), no longer than the max batch size."""
+    records = form_dict.get(key)
+    if records is None:
+        frappe.throw(_("{0} is required").format(key))
+    if isinstance(records, str):
         try:
-            transactions = json.loads(transactions)
+            records = json.loads(records)
         except ValueError:
-            frappe.throw(_("transactions must be valid JSON"))
-    if not isinstance(transactions, list):
-        frappe.throw(_("transactions must be a list"))
-    if not transactions:
-        frappe.throw(_("transactions must contain at least one record"))
+            frappe.throw(_("{0} must be valid JSON").format(key))
+    if not isinstance(records, list):
+        frappe.throw(_("{0} must be a list").format(key))
+    if not records:
+        frappe.throw(_("{0} must contain at least one record").format(key))
     max_batch_size = _get_max_batch_size()
-    if len(transactions) > max_batch_size:
-        frappe.throw(_("A maximum of {0} transactions is allowed per request").format(max_batch_size))
-    for i, transaction in enumerate(transactions):
-        if not isinstance(transaction, dict):
-            frappe.throw(_("transactions[{0}] must be an object").format(i))
-    return transactions
+    if len(records) > max_batch_size:
+        frappe.throw(_("A maximum of {0} {1} is allowed per request").format(max_batch_size, key))
+    for i, record in enumerate(records):
+        if not isinstance(record, dict):
+            frappe.throw(_("{0}[{1}] must be an object").format(key, i))
+    return records
 
 
 def _save_transaction(raw, log_name, request_id):
@@ -241,13 +247,39 @@ def _save_transaction(raw, log_name, request_id):
     }
 
 
-def _start_receive_log(request_id, started_at):
+# ---------------------------------------------------------------------------
+# Inbound master-data APIs (Item, Supplier, Supplier Agreement). Each is enabled independently in
+# API Settings > Master Data (Incoming); see masar_mce_api.master_data.
+# ---------------------------------------------------------------------------
+
+@frappe.whitelist(methods=["POST"])
+def process_item():
+    from masar_mce_api.master_data.runner import receive
+
+    return receive("item")
+
+
+@frappe.whitelist(methods=["POST"])
+def process_supplier():
+    from masar_mce_api.master_data.runner import receive
+
+    return receive("supplier")
+
+
+@frappe.whitelist(methods=["POST"])
+def process_supplier_agreement():
+    from masar_mce_api.master_data.runner import receive
+
+    return receive("agreement")
+
+
+def _start_receive_log(request_id, started_at, api_name="process_inventory_transaction"):
     log = frappe.new_doc("MCE API Log")
-    log.api_name = "process_inventory_transaction"
+    log.api_name = api_name
     log.api_type = "Receive"
     log.request_id = request_id
     log.http_method = "POST"
-    log.endpoint = _get_endpoint()
+    log.endpoint = _get_endpoint(api_name)
     log.request_headers = json.dumps(_get_request_headers_masked())
     log.request_payload = json.dumps(frappe.local.form_dict, default=str)
     log.request_timestamp = started_at
@@ -283,11 +315,11 @@ def _finish_with_error(log, started_at, http_status, message):
     return {"success": False, "message": message}
 
 
-def _get_endpoint():
+def _get_endpoint(api_name="process_inventory_transaction"):
     try:
         return frappe.local.request.path
     except Exception:
-        return "/api/method/masar_mce_api.api.process_inventory_transaction"
+        return f"/api/method/masar_mce_api.api.{api_name}"
 
 
 def _get_request_headers_masked():

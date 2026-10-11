@@ -50,7 +50,7 @@
    "read_only": 1
   },
   {
-   "description": "F1, G1A, G1G, H1 or H3 - validated in code (validators.py), not as a framework-level Select, so an unrecognised value still gets a saved Rejected record instead of blocking the insert outright.",
+   "description": "F1, G1A, G1G, H1, H3 or S1 - validated in code (validators.py), not as a framework-level Select, so an unrecognised value still gets a saved Rejected record instead of blocking the insert outright.",
    "fieldname": "transaction_type",
    "fieldtype": "Data",
    "in_list_view": 1,

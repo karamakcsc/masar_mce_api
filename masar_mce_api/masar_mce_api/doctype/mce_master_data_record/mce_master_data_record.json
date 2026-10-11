@@ -1,0 +1,170 @@
+{
+ "actions": [],
+ "creation": "2026-10-07 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "links": [],
+ "modified": "2026-10-07 01:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Masar MCE API",
+ "owner": "Administrator",
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "autoname": "naming_series:",
+ "naming_rule": "By \"Naming Series\" field",
+ "name": "MCE Master Data Record",
+ "in_create": 1,
+ "title_field": "external_key",
+ "show_title_field_in_link": 0,
+ "field_order": [
+  "naming_series",
+  "record_type",
+  "external_key",
+  "status",
+  "column_break_identification",
+  "request_id",
+  "api_log",
+  "supplier",
+  "section_break_result",
+  "rejection_reason",
+  "auto_created",
+  "warnings",
+  "column_break_result",
+  "created_document_type",
+  "created_document_name",
+  "section_break_audit",
+  "raw_payload"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "MCE-MD-.YYYY.-",
+   "default": "MCE-MD-.YYYY.-",
+   "hidden": 1
+  },
+  {
+   "fieldname": "record_type",
+   "fieldtype": "Select",
+   "label": "Record Type",
+   "options": "Item\nSupplier\nSupplier Agreement",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "external_key",
+   "fieldtype": "Data",
+   "label": "External Key",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "search_index": 1,
+   "description": "item_code / supplier_code / order_no as received.",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nCreated\nRejected",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_identification",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "request_id",
+   "fieldtype": "Data",
+   "label": "Request ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "api_log",
+   "fieldtype": "Link",
+   "label": "API Log",
+   "options": "MCE API Log",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_result",
+   "fieldtype": "Section Break",
+   "label": "Result"
+  },
+  {
+   "fieldname": "rejection_reason",
+   "fieldtype": "Small Text",
+   "label": "Rejection Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "auto_created",
+   "fieldtype": "Small Text",
+   "label": "Auto-Created Master Data",
+   "description": "Master data created by this record because its setting is Create.",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_result",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "created_document_type",
+   "fieldtype": "Link",
+   "label": "Created Document Type",
+   "options": "DocType",
+   "read_only": 1
+  },
+  {
+   "fieldname": "created_document_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Created Document",
+   "options": "created_document_type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_audit",
+   "fieldtype": "Section Break",
+   "label": "Audit"
+  },
+  {
+   "fieldname": "raw_payload",
+   "fieldtype": "Code",
+   "label": "Raw Payload",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "warnings",
+   "fieldtype": "Small Text",
+   "label": "Warnings",
+   "read_only": 1,
+   "description": "Data received but not used (ignored items / penalties) and pricing differences."
+  }
+ ],
+ "permissions": [
+  {
+   "read": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1,
+   "email": 1,
+   "share": 1,
+   "delete": 1,
+   "role": "System Manager"
+  }
+ ]
+}

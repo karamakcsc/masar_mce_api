@@ -15,19 +15,22 @@ from frappe import _
 
 from masar_mce_api.utils import (
 	get_active_supplier_agreement,
+	item_allowed_for_supplier,
 	item_exists,
 	resolve_purchase_order_for_agreement_item,
 	resolve_supplier_by_code,
 	resolve_warehouse_by_code,
 )
 
-TRANSACTION_TYPES = ("F1", "G1A", "G1G", "H1", "H3")
+TRANSACTION_TYPES = ("F1", "G1A", "G1G", "H1", "H3", "S1")
 
 POSTING_DATETIME_FORMAT = "%d/%m/%Y %H:%M:%S"
 
 # Warehouse role rules for the four Stock Entry ("سند تدوير") transaction
-# types. G1G (Purchase Receipt) is handled separately below: it has no
-# source warehouse and no warehouse-type restriction on the target.
+# types. G1G (Purchase Receipt) and S1 (Return to Supplier issue) are handled
+# separately below: G1G has no source warehouse and no warehouse-type
+# restriction on the target; S1 issues stock out of the source warehouse
+# (any type) back to a supplier, so its target warehouse is optional.
 WAREHOUSE_RULES = {
 	"F1": {"source_type": "سوق", "target_type": "مستودع"},
 	"G1A": {"source_type": "مستودع", "target_type": "سوق"},
@@ -140,6 +143,15 @@ def validate_g1g_agreement(item_code, supplier):
 	return None
 
 
+def validate_s1_party_item(item_code, supplier):
+	"""Mirrors masar_mce's Stock Entry.on_submit::validate_party_specific_item
+	for 'إرجاع إلى المورد', so the row is rejected up front instead of the
+	created Stock Entry failing later at submit."""
+	if not item_allowed_for_supplier(item_code, supplier):
+		return _("Item {0} is not allowed for Supplier {1} (no Party Specific Item)").format(item_code, supplier)
+	return None
+
+
 def _reject(doc, reasons):
 	doc.validation_status = "Rejected"
 	doc.rejection_reason = " | ".join(reasons)
@@ -179,6 +191,27 @@ def run_validation(doc):
 			reasons.append(error)
 		elif supplier:
 			doc.supplier = supplier
+	elif doc.transaction_type == "S1":
+		source_warehouse, error = validate_warehouse_role(doc.source_warehouse_no, None, _("source_warehouse"))
+		if error:
+			reasons.append(error)
+		elif source_warehouse:
+			doc.source_warehouse = source_warehouse.name
+
+		# Optional: a Material Issue has no target. When sent it must still be
+		# a real warehouse, but it is only recorded here, never on the Stock Entry.
+		if doc.target_warehouse_no:
+			target_warehouse, error = validate_warehouse_role(doc.target_warehouse_no, None, _("target_warehouse"))
+			if error:
+				reasons.append(error)
+			elif target_warehouse:
+				doc.target_warehouse = target_warehouse.name
+
+		supplier, error = validate_supplier(doc.supplier_raw)
+		if error:
+			reasons.append(error)
+		elif supplier:
+			doc.supplier = supplier
 	else:
 		rule = WAREHOUSE_RULES.get(doc.transaction_type)
 		if rule:
@@ -211,6 +244,11 @@ def run_validation(doc):
 			if agreement_error:
 				row.validation_error = agreement_error
 				reasons.append(_("Item row {0}: {1}").format(idx, agreement_error))
+		elif doc.transaction_type == "S1" and doc.get("supplier"):
+			party_error = validate_s1_party_item(row.item_code, doc.supplier)
+			if party_error:
+				row.validation_error = party_error
+				reasons.append(_("Item row {0}: {1}").format(idx, party_error))
 
 	if reasons:
 		_reject(doc, reasons)

@@ -20,7 +20,50 @@
   "column_break_receivable",
   "auto_submit_created_documents",
   "section_break_receivable_notes",
-  "receivable_description"
+  "receivable_description",
+  "tab_master_data",
+  "section_break_item_api",
+  "item_api_enabled",
+  "item_group_action",
+  "item_stock_uom_action",
+  "item_barcode_action",
+  "column_break_item_api",
+  "item_supplier_action",
+  "item_local_zone_tax_action",
+  "item_free_zone_tax_action",
+  "section_break_item_defaults",
+  "default_parent_item_group",
+  "minimal_supplier_group",
+  "column_break_item_defaults",
+  "tax_template_company",
+  "tax_template_account",
+  "section_break_tax_mapping",
+  "tax_rate_mapping",
+  "section_break_supplier_api",
+  "supplier_api_enabled",
+  "supplier_country_action",
+  "supplier_group_action",
+  "supplier_territory_action",
+  "column_break_supplier_api",
+  "supplier_national_id_action",
+  "supplier_tax_id_action",
+  "supplier_address_action",
+  "supplier_contact_action",
+  "section_break_supplier_defaults",
+  "default_parent_supplier_group",
+  "default_supplier_type",
+  "column_break_supplier_defaults",
+  "default_parent_territory",
+  "default_territory_days",
+  "section_break_agreement_api",
+  "agreement_api_enabled",
+  "agreement_type_action",
+  "agreement_other_terms_action",
+  "agreement_penalties_action",
+  "column_break_agreement_api",
+  "agreement_items_action",
+  "agreement_price_difference_action",
+  "default_agreement_company"
  ],
  "fields": [
   {
@@ -127,13 +170,301 @@
    "fieldname": "receivable_description",
    "fieldtype": "Small Text",
    "label": "Description"
+  },
+  {
+   "fieldname": "tab_master_data",
+   "fieldtype": "Tab Break",
+   "label": "Master Data (Incoming)"
+  },
+  {
+   "fieldname": "section_break_item_api",
+   "fieldtype": "Section Break",
+   "label": "Item API",
+   "description": "process_item. Create = missing master data is created automatically; Stop = the Item is rejected and the missing value is reported."
+  },
+  {
+   "fieldname": "item_api_enabled",
+   "fieldtype": "Check",
+   "label": "Item API Enabled",
+   "default": "0"
+  },
+  {
+   "fieldname": "item_group_action",
+   "fieldtype": "Select",
+   "label": "Missing Item Group",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create uses Default Parent Item Group below."
+  },
+  {
+   "fieldname": "item_stock_uom_action",
+   "fieldtype": "Select",
+   "label": "Missing Stock UOM",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": ""
+  },
+  {
+   "fieldname": "item_barcode_action",
+   "fieldtype": "Select",
+   "label": "Missing Barcode",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Stop = barcode is required in the payload. Create = an Item without a barcode is accepted. A barcode already used by another Item is always rejected."
+  },
+  {
+   "fieldname": "column_break_item_api",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "item_supplier_action",
+   "fieldtype": "Select",
+   "label": "Missing Supplier",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create = a minimal Supplier is created from supplier (code) and supplier_name only, skipping the Supplier's other mandatory fields. Stop = the Item is rejected."
+  },
+  {
+   "fieldname": "item_local_zone_tax_action",
+   "fieldtype": "Select",
+   "label": "Missing Local Zone Tax Template",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create uses Tax Template Company / Account below."
+  },
+  {
+   "fieldname": "item_free_zone_tax_action",
+   "fieldtype": "Select",
+   "label": "Missing Free Zone Tax Template",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create uses Tax Template Company / Account below."
+  },
+  {
+   "fieldname": "section_break_item_defaults",
+   "fieldtype": "Section Break",
+   "label": "Item API Defaults"
+  },
+  {
+   "fieldname": "default_parent_item_group",
+   "fieldtype": "Link",
+   "label": "Default Parent Item Group",
+   "options": "Item Group",
+   "default": "All Item Groups"
+  },
+  {
+   "fieldname": "minimal_supplier_group",
+   "fieldtype": "Link",
+   "label": "Supplier Group for Minimal Suppliers",
+   "options": "Supplier Group"
+  },
+  {
+   "fieldname": "column_break_item_defaults",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tax_template_company",
+   "fieldtype": "Link",
+   "label": "Tax Template Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "tax_template_account",
+   "fieldtype": "Link",
+   "label": "Tax Template Account",
+   "options": "Account",
+   "description": "Tax account used on Item Tax Templates created by the Item API."
+  },
+  {
+   "fieldname": "section_break_tax_mapping",
+   "fieldtype": "Section Break",
+   "label": "Tax Rate Mapping",
+   "description": "Used when more than one Item Tax Template has the received rate (e.g. 0% zero-rated vs exempt). An ambiguous rate with no mapping is rejected."
+  },
+  {
+   "fieldname": "tax_rate_mapping",
+   "fieldtype": "Table",
+   "label": "Tax Rate Mapping",
+   "options": "MCE Tax Rate Mapping"
+  },
+  {
+   "fieldname": "section_break_supplier_api",
+   "fieldtype": "Section Break",
+   "label": "Supplier API",
+   "description": "process_supplier. Create = missing master data is created automatically; Stop = the Supplier is rejected and the missing value is reported."
+  },
+  {
+   "fieldname": "supplier_api_enabled",
+   "fieldtype": "Check",
+   "label": "Supplier API Enabled",
+   "default": "0"
+  },
+  {
+   "fieldname": "supplier_country_action",
+   "fieldtype": "Select",
+   "label": "Missing Country",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": ""
+  },
+  {
+   "fieldname": "supplier_group_action",
+   "fieldtype": "Select",
+   "label": "Missing Supplier Group",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create uses Default Parent Supplier Group below."
+  },
+  {
+   "fieldname": "supplier_territory_action",
+   "fieldtype": "Select",
+   "label": "Missing Territory",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create uses Default Parent Territory below."
+  },
+  {
+   "fieldname": "column_break_supplier_api",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "supplier_national_id_action",
+   "fieldtype": "Select",
+   "label": "Missing National ID",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "National ID is mandatory on Supplier, so a missing value is rejected either way - it is never generated."
+  },
+  {
+   "fieldname": "supplier_tax_id_action",
+   "fieldtype": "Select",
+   "label": "Missing Tax ID",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Tax ID is mandatory on Supplier, so a missing value is rejected either way - it is never generated."
+  },
+  {
+   "fieldname": "supplier_address_action",
+   "fieldtype": "Select",
+   "label": "Primary Address",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create = the primary Address is created from supplier_primary_address. Stop = the Supplier is rejected if no address is sent."
+  },
+  {
+   "fieldname": "supplier_contact_action",
+   "fieldtype": "Select",
+   "label": "Primary Contact",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create = the primary Contact is created from supplier_primary_contact. Stop = the Supplier is rejected if no contact is sent."
+  },
+  {
+   "fieldname": "section_break_supplier_defaults",
+   "fieldtype": "Section Break",
+   "label": "Supplier API Defaults"
+  },
+  {
+   "fieldname": "default_parent_supplier_group",
+   "fieldtype": "Link",
+   "label": "Default Parent Supplier Group",
+   "options": "Supplier Group",
+   "default": "All Supplier Groups"
+  },
+  {
+   "fieldname": "default_supplier_type",
+   "fieldtype": "Select",
+   "label": "Default Supplier Type",
+   "options": "Company\nIndividual\nPartnership",
+   "default": "Company"
+  },
+  {
+   "fieldname": "column_break_supplier_defaults",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_parent_territory",
+   "fieldtype": "Link",
+   "label": "Default Parent Territory",
+   "options": "Territory",
+   "default": "All Territories"
+  },
+  {
+   "fieldname": "default_territory_days",
+   "fieldtype": "Int",
+   "label": "Default Territory Number of Days",
+   "default": "60",
+   "description": "Territory Details.number_of_days when the payload does not send territory_days."
+  },
+  {
+   "fieldname": "section_break_agreement_api",
+   "fieldtype": "Section Break",
+   "label": "Supplier Agreement API",
+   "description": "process_supplier_agreement. Creates Draft Supplier Agreements (Blanket Orders). Items and Suppliers are never created by this API."
+  },
+  {
+   "fieldname": "agreement_api_enabled",
+   "fieldtype": "Check",
+   "label": "Supplier Agreement API Enabled",
+   "default": "0"
+  },
+  {
+   "fieldname": "agreement_type_action",
+   "fieldtype": "Select",
+   "label": "Missing Supplier Agreement Type",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create = the Supplier Agreement Type is created. Stop = the agreement is rejected."
+  },
+  {
+   "fieldname": "agreement_other_terms_action",
+   "fieldtype": "Select",
+   "label": "Other Terms",
+   "options": "Stop\nCreate",
+   "default": "Stop",
+   "description": "Create = a missing Terms and Conditions record is created from the received title and text; agreements without Other Terms are accepted. Stop = missing Other Terms or a missing Terms and Conditions record rejects the agreement."
+  },
+  {
+   "fieldname": "agreement_penalties_action",
+   "fieldtype": "Select",
+   "label": "Received Penalties",
+   "options": "Stop\nIgnore",
+   "default": "Stop",
+   "description": "The API never creates penalties. Ignore = received penalties are discarded (kept only in the raw payload). Stop = an agreement that contains penalties is rejected."
+  },
+  {
+   "fieldname": "column_break_agreement_api",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "agreement_items_action",
+   "fieldtype": "Select",
+   "label": "Missing Items",
+   "options": "Stop\nIgnore",
+   "default": "Stop",
+   "description": "Items are never created by this API. Stop = any missing Item rejects the agreement (all missing Items are listed). Ignore = rows with a missing Item are left out; an agreement with no remaining rows is rejected."
+  },
+  {
+   "fieldname": "agreement_price_difference_action",
+   "fieldtype": "Select",
+   "label": "Pricing Difference",
+   "options": "Stop\nWarn in Terms and Conditions\nIgnore",
+   "default": "Stop",
+   "description": "When received prices differ from the system calculation (masar_mce_api.pricing). Stop = rejected. Warn = created with the system values and a warning appended to General Terms and Conditions. Ignore = created with the system values."
+  },
+  {
+   "fieldname": "default_agreement_company",
+   "fieldtype": "Link",
+   "label": "Default Agreement Company",
+   "options": "Company",
+   "description": "Used when the payload has no company. Falls back to the global default company."
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-09-21 00:00:00.000000",
+ "modified": "2026-10-07 01:00:00.000000",
  "modified_by": "Administrator",
  "module": "Masar MCE API",
  "name": "API Settings",
