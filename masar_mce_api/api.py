@@ -273,12 +273,12 @@ def process_supplier_agreement():
     return receive("agreement")
 
 
-def _start_receive_log(request_id, started_at, api_name="process_inventory_transaction"):
+def _start_receive_log(request_id, started_at, api_name="process_inventory_transaction", http_method="POST"):
     log = frappe.new_doc("MCE API Log")
     log.api_name = api_name
     log.api_type = "Receive"
     log.request_id = request_id
-    log.http_method = "POST"
+    log.http_method = http_method
     log.endpoint = _get_endpoint(api_name)
     log.request_headers = json.dumps(_get_request_headers_masked())
     log.request_payload = json.dumps(frappe.local.form_dict, default=str)
@@ -327,3 +327,61 @@ def _get_request_headers_masked():
         return mask_headers(dict(frappe.local.request.headers))
     except Exception:
         return {}
+
+@frappe.whitelist(methods=["GET"])
+def get_employee_phone_number(national_id=None):
+    started_at = now_datetime()
+    log = _start_receive_log(
+        frappe.generate_hash(length=10), started_at, "get_employee_phone_number", http_method="GET"
+    )
+    try:
+        national_id = national_id or frappe.get_request_header("national_id")
+        if not national_id:
+            response = {"success": False, "message": "National ID is required."}
+        else:
+            phone = frappe.db.get_value(
+                "Employee", {"custom_national_number": national_id , "status" : "Active"}, "cell_number"
+            )
+            if phone:
+                response = {
+                    "success": True, 
+                    "phone_number": phone
+                }
+            else:
+                phone = frappe.db.get_value(
+                    "Employee", {"custom_national_number": national_id}, "status"
+                )
+                if phone:
+                    response = {
+                        "success": False, 
+                        "message": "Employee is not active."
+                    }
+                else:
+                    response = {
+                        "success": False, 
+                        "message": "Employee not found."
+                    }
+    except Exception:
+        _finish_lookup_log(log, started_at, None, "Error", frappe.get_traceback())
+        raise
+
+    _finish_lookup_log(
+        log,
+        started_at,
+        response,
+        "Success" if response["success"] else "Failed",
+        response.get("message"),
+    )
+    return response
+
+
+def _finish_lookup_log(log, started_at, response_payload, application_status, error_message=None):
+    finished_at = now_datetime()
+    if response_payload is not None:
+        log.db_set("response_payload", json.dumps(response_payload, default=str))
+    if error_message:
+        log.db_set("error_message", error_message)
+    log.db_set("application_status", application_status)
+    log.db_set("response_timestamp", finished_at)
+    log.db_set("processing_duration", (finished_at - started_at).total_seconds())
+    frappe.db.commit()
